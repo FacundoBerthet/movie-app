@@ -1,0 +1,27 @@
+import httpx
+from functools import lru_cache
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class Settings(BaseSettings):
+    app_name: str = "Movie App API"
+
+    tmdb_api_key: str
+    tmdb_base_url: str 
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8"
+    )
+
+@lru_cache
+def get_settings() -> Settings:
+    return Settings()
+
+@lru_cache
+def get_tmdb_client() -> httpx.AsyncClient:
+    settings = get_settings()
+    return httpx.AsyncClient(
+        base_url=settings.tmdb_base_url,
+        params={"api_key": settings.tmdb_api_key},
+        timeout=10.0,
+    )
