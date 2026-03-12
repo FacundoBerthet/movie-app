@@ -59,3 +59,33 @@ async def get_upcoming_movies(client: httpx.AsyncClient,
         raise UpstreamError("Invalid response from TMDB")
 
     return to_paginated_movies(data)
+
+
+async def search_movies(
+    client: httpx.AsyncClient,
+    query: str,
+    language: str,
+    page: int = 1) -> PaginatedMovies:
+
+    params = {
+        "query": query,
+        "language": language,
+        "page": page,
+    }
+
+    try:
+        response = await client.get("/search/movie", params=params)
+        response.raise_for_status()
+
+    except httpx.TimeoutException:
+        raise UpstreamError("TMDB request timed out")
+    except httpx.HTTPStatusError as e:
+        raise UpstreamError(f"TMDB returned status {e.response.status_code}")
+    except httpx.RequestError:
+        raise UpstreamError("Could not connect to TMDB")
+
+    data = response.json()
+    if "results" not in data:
+        raise UpstreamError("Invalid response from TMDB")
+
+    return to_paginated_movies(data)
