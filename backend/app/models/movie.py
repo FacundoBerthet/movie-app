@@ -30,7 +30,6 @@ class MovieSummary(BaseModel):
     year: str | None
     rating: float | None
     poster_url: str | None
-    genres: list[Genre]
 
 class MovieDetail(BaseModel):
     """
