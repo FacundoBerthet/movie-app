@@ -11,7 +11,7 @@ class CastMember(BaseModel):
     profile_url: str | None
 
 class StreamingProvider(BaseModel):
-    provider_id: int
+    id: int
     name: str
     logo_url: str
 
@@ -49,7 +49,7 @@ class MovieDetail(BaseModel):
     recommendations: list[MovieSummary]
 
 class PaginatedMovies(BaseModel):
-    list: list[MovieSummary]
+    list_of_movies: list[MovieSummary]
     page: int
     total_pages: int
     total_results: int
