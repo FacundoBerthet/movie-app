@@ -11,7 +11,7 @@ from app.models.movie import PaginatedMovies, MovieSummary, MovieDetail, Genre, 
 
 
 # ---------------------------------------------------------------------------
-# Mappers — dict crudo de TMDB → models
+# Mappers — dict crudo de TMDB → modelos
 # ---------------------------------------------------------------------------
 
 def to_paginated_movies(data: dict) -> PaginatedMovies:

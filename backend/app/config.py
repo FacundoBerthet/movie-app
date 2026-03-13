@@ -3,6 +3,8 @@ from functools import lru_cache
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
+    """Variables de entorno necesarias para el backend."""
+
     app_name: str = "Movie App API"
 
     tmdb_api_key: str
@@ -19,6 +21,8 @@ def get_settings() -> Settings:
 
 @lru_cache
 def get_tmdb_client() -> httpx.AsyncClient:
+    """Crea un AsyncClient cacheado con base_url, api_key y timeout por defecto."""
+
     settings = get_settings()
     return httpx.AsyncClient(
         base_url=settings.tmdb_base_url,

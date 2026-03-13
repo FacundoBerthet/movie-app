@@ -1,3 +1,5 @@
+"""Modelos Pydantic usados por endpoints y capa de servicio."""
+
 from pydantic import BaseModel
 
 class Genre(BaseModel):
@@ -49,6 +51,8 @@ class MovieDetail(BaseModel):
     recommendations: list[MovieSummary]
 
 class PaginatedMovies(BaseModel):
+    """Clase para respuestas paginadas de peliculas."""
+
     list_of_movies: list[MovieSummary]
     page: int
     total_pages: int
