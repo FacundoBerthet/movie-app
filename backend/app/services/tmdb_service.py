@@ -1,11 +1,22 @@
-import httpx
+"""
+Capa de servicio para la API de TMDB.
+Aca hay funciones mapper para convertir las respuestas JSON de TMDB en los modelos 
+propios, y funciones async que realizan los requests HTTP.
+"""
+
+import httpx, asyncio
 from datetime import date, timedelta
-from app.errors.app_errors import UpstreamError
-from app.models.movie import PaginatedMovies, MovieSummary
+from app.errors.app_errors import UpstreamError, NotFoundError
+from app.models.movie import PaginatedMovies, MovieSummary, MovieDetail, Genre, CastMember, StreamingProvider, WatchProviders
+
+
+# ---------------------------------------------------------------------------
+# Mappers — dict crudo de TMDB → models
+# ---------------------------------------------------------------------------
 
 def to_paginated_movies(data: dict) -> PaginatedMovies:
     return PaginatedMovies(
-        list=[to_movie_summary(movie) for movie in data["results"]],
+        list_of_movies=[to_movie_summary(movie) for movie in data["results"]],
         page=data["page"],
         total_pages=data["total_pages"],
         total_results=data["total_results"]
@@ -19,16 +30,62 @@ def to_movie_summary(data: dict) -> MovieSummary:
         overview=data.get("overview"),
         year=data.get("release_date", "")[:4] or None,
         rating=data.get("vote_average"),
-        poster_url=f"https://image.tmdb.org/t/p/w500{poster_path}" if poster_path else None,
-        genres=[]  
+        poster_url=f"https://image.tmdb.org/t/p/w500{poster_path}" if poster_path else None
     )
 
+def to_movie_detail(data: dict) -> MovieDetail:
+    poster_path = data.get("poster_path")
+    backdrop_path = data.get("backdrop_path")
+    return MovieDetail(
+        id = data["id"],
+        title = data["title"],
+        overview = data.get("overview"),
+        release_date = data.get("release_date"),
+        poster_url = f"https://image.tmdb.org/t/p/w500{poster_path}" if poster_path else None,
+        tagline=data.get("tagline"),
+        runtime=data.get("runtime"),
+        backdrop_url=f"https://image.tmdb.org/t/p/original{backdrop_path}" if backdrop_path else None,
+        genres=[Genre(id=g["id"], name=g["name"]) for g in data.get("genres", [])],
+        cast=[],
+        watch_providers=None,
+        recommendations=[],
+    )
+
+def to_cast_member(data: dict) -> CastMember:
+    profile_path = data.get("profile_path")
+    return CastMember(
+        id = data["id"],
+        name = data.get("name"),
+        character = data.get("character"),
+        profile_url = f"https://image.tmdb.org/t/p/w185{profile_path}" if profile_path else None
+    )
+
+def to_streaming_provider(data: dict) -> StreamingProvider:
+    logo_path = data.get("logo_path")
+    return StreamingProvider(
+        id = data.get("provider_id"),
+        name = data.get("provider_name"),
+        logo_url = f"https://image.tmdb.org/t/p/w92{logo_path}" if logo_path else None
+    )
+
+def to_watch_provider(data:dict) -> WatchProviders:
+    return WatchProviders(
+        stream= [to_streaming_provider(s) for s in data.get("flatrate", [])],
+        rent = [to_streaming_provider(s) for s in data.get("rent", [])],
+        buy = [to_streaming_provider(s) for s in data.get("buy", [])]
+    )
+
+
+# ---------------------------------------------------------------------------
+# Llamadas a la API
+# ---------------------------------------------------------------------------
 
 async def get_upcoming_movies(client: httpx.AsyncClient,
     language: str = "es-AR",
     region: str = "AR",
     page: int = 1,
     days_ahead:int = 30) -> PaginatedMovies:
+    """Devuelve películas con estreno en cines dentro de los próximos `days_ahead` días."""
 
     today = date.today()
     end_date = today + timedelta(days=days_ahead)
@@ -66,6 +123,7 @@ async def search_movies(
     query: str,
     language: str,
     page: int = 1) -> PaginatedMovies:
+    """Busca películas por título en TMDB."""
 
     params = {
         "query": query,
@@ -89,3 +147,45 @@ async def search_movies(
         raise UpstreamError("Invalid response from TMDB")
 
     return to_paginated_movies(data)
+
+async def get_movie_details(client: httpx.AsyncClient,
+                            movie_id: int,
+                            region: str = "AR",
+                            language: str = "es-AR") -> MovieDetail:
+    """Obtiene el detalle completo de una película en un único round-trip paralelo.
+
+    Realiza de forma concurrente los requests de detalles, credits, watch providers
+    y recomendaciones, y los ensambla en un único objeto MovieDetail.
+    """
+    try:
+        details, credits, providers, recommendations = await asyncio.gather(
+            client.get(f"/movie/{movie_id}", params={"language": language}),
+            client.get(f"/movie/{movie_id}/credits", params={"language": language}),
+            client.get(f"/movie/{movie_id}/watch/providers"),
+            client.get(f"/movie/{movie_id}/recommendations", params={"language": language}),
+        )
+        details.raise_for_status()
+        credits.raise_for_status()
+        providers.raise_for_status()
+        recommendations.raise_for_status()
+
+    except httpx.TimeoutException:
+        raise UpstreamError("TMDB request timed out")
+    except httpx.HTTPStatusError as e:
+        if e.response.status_code == 404:
+            raise NotFoundError("Movie not found")
+        raise UpstreamError(f"TMDB returned status {e.response.status_code}")
+    except httpx.RequestError:
+        raise UpstreamError("Could not connect to TMDB")
+
+    detail_data = details.json()
+    credits_data = credits.json()
+    providers_data = providers.json().get("results", {}).get(region.upper(), {})
+    recommendations_data = recommendations.json()
+
+    movie = to_movie_detail(detail_data)
+    movie.cast = [to_cast_member(m) for m in credits_data.get("cast", [])[:20]]
+    movie.watch_providers = to_watch_provider(providers_data) if providers_data else None
+    movie.recommendations = [to_movie_summary(r) for r in recommendations_data.get("results", [])]
+
+    return movie
