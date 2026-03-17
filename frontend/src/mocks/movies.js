@@ -1,5 +1,3 @@
-// src/mocks/movies.js
-
 export const upcomingMoviesMock = {
   page: 1,
   total_pages: 3,
