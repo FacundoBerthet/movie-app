@@ -16,14 +16,14 @@ export default function Navbar() {
 
     return (
         <header 
-            className={`fixed top-0 left-0 right-0 z-50 h-16 w-full px-0 md:px-10 transition-colors duration-500
-            ${scrolled ? 'bg-noche' : 'bg-transparent'}`}>
+            className={`fixed top-0 left-0 right-0 z-50 h-16 w-full px-0 md:px-10 transition-colors duration-300
+            ${scrolled ? 'bg-noche' : 'bg-trasparent'}`}>
 
             <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-full">
                 {/* izquierda — logo */}
                 <div className="flex items-center">
-                    <span className="text-2xl font-bold tracking-widest text-reflector2">
-                        FILM<span className="text-bordo2">r</span>
+                    <span className="text-4xl font-bold tracking-widest text-reflector2">
+                        film<span className="text-bordo2">R</span>
                     </span>
                 </div>
 
@@ -60,10 +60,10 @@ export default function Navbar() {
 
                     {/* nav desktop */}
                     <nav className="hidden items-center gap-6 md:flex">
-                        <button className="text-sm text-reflector transition-colors hover:text-reflector2">
+                        <button className="text-3xl font-bold text-reflector transition-colors hover:text-reflector2">
                             Inicio
                         </button>
-                        <button className="text-sm text-reflector transition-colors hover:text-reflector2">
+                        <button className="text-3xl font-bold text-reflector transition-colors hover:text-reflector2">
                             Próximamente
                         </button>
                     </nav>
