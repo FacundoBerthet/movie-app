@@ -1,4 +1,8 @@
+import { useNavigate } from "react-router-dom"
+
 export default function HeroBanner({movie}){
+    const navigate = useNavigate()
+    
     if (!movie) return null
     return (
         <div className="relative w-full h-screen">
@@ -7,7 +11,7 @@ export default function HeroBanner({movie}){
             <div className="absolute inset-0">
                 <img src={movie.backdrop_url} alt={movie.title} className="w-full h-full object-cover" />
             </div>
-            {/* degradado izquierda hacia derecha para que el texto respire */}
+            {/* degradado izquierda hacia derecha */}
             <div className="absolute inset-0 bg-gradient-to-l from-noche/90 via-noche/40 to-transparent" />
             {/* degradado abajo hacia arriba para transición suave a las rows */}
             <div className="absolute inset-0 bg-gradient-to-b from-sala/50 via-transparent to-transparent" />
@@ -80,8 +84,10 @@ export default function HeroBanner({movie}){
                     </div>
                     )}
 
-                    {/* botón */}
-                    <button className="self-start mt-2 px-6 py-2.5 bg-reflector text-noche text-sm font-semibold rounded-full hover:bg-reflector2 transition-colors duration-300 tracking-wide">
+                    {/* botón ver detalles de la peli*/}
+                    <button 
+                        className="self-start mt-2 px-6 py-2.5 bg-reflector text-noche text-sm font-semibold rounded-full hover:bg-reflector2 transition-colors duration-300 tracking-wide"
+                        onClick={() => navigate('/movies/${movie.id}')}>
                         Ver detalle →
                     </button>
 
