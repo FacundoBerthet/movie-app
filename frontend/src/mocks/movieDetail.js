@@ -6,8 +6,14 @@ export const movieDetailMock = {
   "poster_url": "https://image.tmdb.org/t/p/w500/sgTAWJFaB2kBvdQxRGabYFiQqEK.jpg",
   "tagline": "Caos, travesuras y jabón",
   "runtime": 139,
+  "rating": 8,
   "backdrop_url": "https://image.tmdb.org/t/p/original/xRyINp9KfMLVjRiO5nCsoRDdvvF.jpg",
   "logo_url": "https://image.tmdb.org/t/p/original/8IgLvXhhr04vLKUZ62lYoyb9IAL.png",
+  "crew_highlights": [
+    { "role": "Director", "name": "David Fincher", "profile_url": "https://image.tmdb.org/t/p/w185/8nytsqL59SFJTVYVrN72k6qkGgJ.jpg"},
+    { "role": "Screenplay", "name": "Jim Uhls", "profile_url": "https://image.tmdb.org/t/p/w185/8nytsqL59SFJTVYVrN72k6qkGgJ.jpg"},
+    { "role": "Novel", "name": "Chuck Palahniuk", "profile_url": "https://image.tmdb.org/t/p/w185/8nytsqL59SFJTVYVrN72k6qkGgJ.jpg" }
+    ],
   "genres": [
     {
       "id": 18,
