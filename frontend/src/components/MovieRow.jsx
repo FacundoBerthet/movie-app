@@ -28,7 +28,7 @@ export default function MovieRow({ title, movies }) {
 
             {/* título + indicadores */}
             <div className="flex justify-between gap-2 sm:gap-3 mb-3 pl-6 mr-8">
-                <h2 className="font-sans text-reflector text-xl">{title}</h2>
+                <h2 className="font-sans text-reflector text-2xl font-normal">{title}</h2>
                 <div className="flex items-center gap-1">
                 {Array.from({ length: totalPages }).map((_, i) => (
                     <div
