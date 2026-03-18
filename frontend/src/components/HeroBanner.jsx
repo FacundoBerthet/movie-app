@@ -1,4 +1,5 @@
 export default function HeroBanner({movie}){
+    if (!movie) return null
     return (
         <div className="relative w-full h-screen">
 
@@ -6,15 +7,25 @@ export default function HeroBanner({movie}){
             <div className="absolute inset-0">
                 <img src={movie.backdrop_url} alt={movie.title} className="w-full h-full object-cover" />
             </div>
-            {/* degradado izquierda → derecha para que el texto respire */}
+            {/* degradado izquierda hacia derecha para que el texto respire */}
             <div className="absolute inset-0 bg-gradient-to-l from-noche/90 via-noche/40 to-transparent" />
-            {/* degradado abajo → arriba para transición suave a las rows */}
-            <div className="absolute inset-0 bg-gradient-to-b from-sala via-transparent to-transparent" />
+            {/* degradado abajo hacia arriba para transición suave a las rows */}
+            <div className="absolute inset-0 bg-gradient-to-b from-sala/50 via-transparent to-transparent" />
+            {/* degradado abajo hacia arriba para transición suave a las rows */}
+            <div className="absolute inset-0 bg-gradient-to-t from-sala via-transparent to-transparent" />
 
             {/* Contenido */}
-            <div className="relative h-full flex items-center justify-end pr-12 md:pr-20">
+            <div className="relative h-full flex items-center justify-end pr-12 pb-12">
                 <div className="max-w-md flex flex-col gap-5">
                     
+                    {/* badge "Popular hoy" */}
+                    <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                        <span className="text-xs text-reflector uppercase tracking-widest font-medium">
+                            Popular hoy
+                        </span>
+                    </div>
+
                     {/* logo o título */}
                     {movie.logo_url ? (
                     <img
