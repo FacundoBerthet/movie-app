@@ -7,6 +7,7 @@ export const movieDetailMock = {
   "tagline": "Caos, travesuras y jabón",
   "runtime": 139,
   "backdrop_url": "https://image.tmdb.org/t/p/original/xRyINp9KfMLVjRiO5nCsoRDdvvF.jpg",
+  "logo_url": "https://image.tmdb.org/t/p/original/8IgLvXhhr04vLKUZ62lYoyb9IAL.png",
   "genres": [
     {
       "id": 18,
