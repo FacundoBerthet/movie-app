@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Search, EllipsisVertical, X } from "lucide-react"
 
 export default function Navbar() {
     const [openMenu, setOpenMenu] = useState(false)
@@ -16,13 +17,13 @@ export default function Navbar() {
 
     return (
         <header 
-            className={`fixed top-0 left-0 right-0 z-50 h-16 w-full px-0 md:px-10 transition-colors duration-300
+            className={`fixed top-0 left-0 right-0 z-50  h-16 md:h-20 w-full px-0 md:px-10 transition-colors duration-300
             ${scrolled ? 'bg-noche' : 'bg-trasparent'}`}>
 
             <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-full">
                 {/* izquierda — logo */}
                 <div className="flex items-center">
-                    <span className="text-4xl font-bold tracking-widest text-reflector2">
+                    <span className="text-4xl md:text-5xl font-bold tracking-widest text-reflector2">
                         film<span className="text-bordo2">R</span>
                     </span>
                 </div>
@@ -43,15 +44,13 @@ export default function Navbar() {
                                     ? 'w-80 border-transparent bg-transparent/25'
                                     : 'w-8 border-transparent'
                             }`}>
-                            <button
-                                onClick={() => setSearchOpen(!searchOpen)}
-                                className="p-1.5 text-reflector hover:text-reflector2">
-                                🔍
+                            <button onClick={() => setSearchOpen(!searchOpen)}>
+                                <Search className='text-reflector hover:text-reflector2' size={30} strokeWidth={3}/>
                             </button>
                             <input
                                 type="text"
                                 placeholder="Buscar películas..."
-                                className={`bg-transparent px-2 py-1 text-sm text-crema placeholder:text-sombra focus:outline-none ${
+                                className={`bg-transparent px-2 py-1 text-m text-crema placeholder:text-sombra focus:outline-none ${
                                     searchOpen ? 'w-full opacity-100' : 'w-0 opacity-0'
                                 }`}
                             />
@@ -59,12 +58,12 @@ export default function Navbar() {
                     </div>
 
                     {/* nav desktop */}
-                    <nav className="hidden items-center gap-6 md:flex">
-                        <button className="text-3xl font-bold text-reflector transition-colors hover:text-reflector2">
-                            Inicio
-                        </button>
-                        <button className="text-3xl font-bold text-reflector transition-colors hover:text-reflector2">
+                    <nav className="hidden items-center gap-6 md:flex text-2xl font-normal">
+                        <button className="text-reflector transition-colors hover:text-reflector2">
                             Próximamente
+                        </button>
+                        <button className="text-reflector transition-colors hover:text-reflector2">
+                            Explorar ▾
                         </button>
                     </nav>
 
@@ -73,7 +72,7 @@ export default function Navbar() {
                         className="text-xl text-reflector transition-colors hover:text-reflector2 md:hidden"
                         onClick={() => setOpenMenu(!openMenu)}
                     >
-                        {openMenu ? '✕' : '☰'}
+                        {openMenu ? <X/> : <EllipsisVertical />}
                     </button>
                 </div>
             </div>
