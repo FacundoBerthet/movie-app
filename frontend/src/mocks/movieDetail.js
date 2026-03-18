@@ -11,8 +11,8 @@ export const movieDetailMock = {
   "logo_url": "https://image.tmdb.org/t/p/original/8IgLvXhhr04vLKUZ62lYoyb9IAL.png",
   "crew_highlights": [
     { "role": "Director", "name": "David Fincher", "profile_url": "https://image.tmdb.org/t/p/w185/8nytsqL59SFJTVYVrN72k6qkGgJ.jpg"},
-    { "role": "Screenplay", "name": "Jim Uhls", "profile_url": "https://image.tmdb.org/t/p/w185/8nytsqL59SFJTVYVrN72k6qkGgJ.jpg"},
-    { "role": "Novel", "name": "Chuck Palahniuk", "profile_url": "https://image.tmdb.org/t/p/w185/8nytsqL59SFJTVYVrN72k6qkGgJ.jpg" }
+    { "role": "Screenplay", "name": "Jim Uhls", "profile_url": "https://image.tmdb.org/t/p/w185/cckcYc2v0yh1tc9QjRelptcOBko.jpg"},
+    { "role": "Novel", "name": "Chuck Palahniuk", "profile_url": null }
     ],
   "genres": [
     {
