@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Search, EllipsisVertical, X } from "lucide-react"
 
+import { Link } from 'react-router-dom'
+
 export default function Navbar() {
     const [openMenu, setOpenMenu] = useState(false)
     const [searchOpen, setSearchOpen] = useState(false)
@@ -22,11 +24,13 @@ export default function Navbar() {
 
             <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-full">
                 {/* izquierda — logo */}
-                <div className="flex items-center">
-                    <span className="text-4xl md:text-5xl font-bold tracking-widest text-reflector2">
-                        film<span className="text-bordo2">R</span>
-                    </span>
-                </div>
+                <Link to="/">
+                    <div className="flex items-center">
+                        <span className="text-4xl md:text-5xl font-bold tracking-widest text-reflector2">
+                            film<span className="text-bordo2">R</span>
+                        </span>
+                    </div>
+                </Link>
 
                 {/* derecha — acciones */}
                 <div className="flex items-center gap-4">
