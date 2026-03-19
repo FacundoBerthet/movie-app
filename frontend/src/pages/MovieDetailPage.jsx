@@ -31,6 +31,27 @@ export default function MovieDetailPage() {
                     <div className="absolute inset-0 bg-gradient-to-r from-sala/10 via-sala/5 to-transparent" />
                     <div className="absolute inset-0 bg-gradient-to-l from-sala/10 via-sala/5 to-transparent" />
 
+                    {/* watch providers — sobre el backdrop arriba derecha */}
+                    {movie.watch_providers?.stream?.length > 0 && (
+                        <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+                            <span className="text-xs text-crema/70 uppercase tracking-widest">
+                                Disponible en
+                            </span>
+                            <div className="flex gap-1.5">
+                                {movie.watch_providers.stream.map(p => (
+                                    <div key={p.id} className="w-8 h-8 rounded-lg bg-zinc-800 overflow-hidden">
+                                        <img
+                                            src={p.logo_url}
+                                            alt={p.name}
+                                            title={p.name}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
                 </div>
 
                 {/* poster + detalles */}
@@ -50,8 +71,8 @@ export default function MovieDetailPage() {
                         )}
                     </div>
 
-                    {/* columna derecha — título, año, metadata */}
-                    <div className='z-10 pb-2 flex flex-col gap-6'>
+                    {/* columna derecha — título, año, etc */}
+                    <div className='z-10 pb-2 flex flex-col gap-3.5'>
 
                         {/* Titulo y año */}
                         <div className='flex items-baseline gap-3'>
@@ -62,6 +83,21 @@ export default function MovieDetailPage() {
                                 ({movie.release_date?.slice(0, 4)})
                             </span>
                         </div>
+                        
+                        {/* Titulo original + fecha completa*/}
+                        <div className="flex items-center gap-3 text-xl text-pergamino">
+                            {movie.original_title && movie.original_title !== movie.title && (
+                                <span>
+                                    Título original: <span className="text-crema italic">{movie.original_title}</span>
+                                </span>
+                            )}
+                            {movie.original_title && movie.original_title !== movie.title && movie.release_date && (
+                                <span className="text-reflector/40 text-2xl">•</span>
+                            )}
+                            {movie.release_date && (
+                                <span className='text-crema'>{movie.release_date.replaceAll("-", "/")}</span>
+                            )}
+                        </div>
 
                         {/* géneros · runtime · rating */}
                         <div className='flex items-center gap-2 text-2xl text-pergamino flex-wrap'>
@@ -70,7 +106,7 @@ export default function MovieDetailPage() {
                                     <span key={g.id}>
                                         {g.name}
                                         {i < movie.genres.length - 1 &&
-                                            <span className='text-reflector mx-1'>·</span>
+                                            <span className='text-reflector/40 mx-1'>•</span>
                                         }
                                     </span>
                                 ))}
