@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom'
 import { getMovieDetail } from '../services/movieService'
 import { useEffect, useState } from 'react'
 import CastCard from '../components/CastCard'
+import MovieRow from '../components/MovieRow'
 
 export default function MovieDetailPage() {
     const { id } = useParams()
@@ -169,6 +170,16 @@ export default function MovieDetailPage() {
                                 <CastCard key={member.id} member={member} />
                             ))}
                         </div>
+                    </div>
+                )}
+
+                {/* recomendaciones */}
+                {movie.recommendations?.length > 0 && (
+                    <div className="mt-12 pt-6 border-t border-reflector/30">
+                        <MovieRow
+                            movies={movie.recommendations}
+                            title="También te puede gustar"
+                        />
                     </div>
                 )}
 
