@@ -16,7 +16,6 @@ export default function Home() {
 
     return(
         <div className='bg-sala'>
-            <Navbar />
 
             <div className='hidden md:block'>    
                 {hero && <HeroBanner movie={hero}/>}

@@ -15,7 +15,6 @@ export default function MovieDetailPage() {
 
     return (
         <div className='bg-sala min-h-screen text-crema'>
-            <Navbar />
 
             {/* Backdrop */}
             <div className='max-w-7xl mx-auto px-5 pt-24'>
