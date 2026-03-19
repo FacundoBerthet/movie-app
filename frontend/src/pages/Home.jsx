@@ -10,7 +10,7 @@ export default function Home() {
     const [movies, setMovies] = useState([])
 
     useEffect(() => {
-        getUpcomingMovies().then(data => setMovies(data.results))
+        getUpcomingMovies().then(data => setMovies(data.list_of_movies))
         getHeroMovie().then(data => setHero(data))
     }, [])
 
