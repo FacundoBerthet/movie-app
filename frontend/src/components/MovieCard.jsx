@@ -5,7 +5,7 @@ export default function MovieCard({ movie, isLast, isFirst }) {
 
   return (
     <div 
-      className={`relative z-0 hover:z-50 cursor-pointer group
+      className={`relative z-0 hover:z-40 cursor-pointer group
                 ${isLast ? "origin-right" : isFirst ? "origin-left" : "origin-center"}`}
       onMouseLeave={() => setExpanded(false)}>
         <div 
