@@ -1,6 +1,7 @@
 export const movieDetailMock = {
   "id": 550,
   "title": "El club de la lucha",
+  "original_title": "Fight Club",
   "overview": "Un hombre consumido por el insomnio y una vida sin sentido conoce a Tyler Durden, un carismático anarquista que lo arrastra a un club secreto donde el dolor despierta algo dormido. Lo que comienza como liberación pronto se convierte en una guerra contra el sistema…",
   "release_date": "1999-10-15",
   "poster_url": "https://image.tmdb.org/t/p/w500/sgTAWJFaB2kBvdQxRGabYFiQqEK.jpg",
