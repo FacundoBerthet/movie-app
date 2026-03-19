@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom'
 import { getMovieDetail } from '../services/movieService'
 import { useEffect, useState } from 'react'
-import Navbar from '../components/Navbar'
+import CastCard from '../components/CastCard'
 
 export default function MovieDetailPage() {
     const { id } = useParams()
@@ -155,6 +155,20 @@ export default function MovieDetailPage() {
                                 </span>
                             </div>
                         ))}
+                    </div>
+                )}
+
+                {/* reparto principal */}
+                {movie.cast?.length > 0 && (
+                    <div className="mt-14 px-8">
+                        <h2 className="font-display text-3xl text-crema mb-4">
+                            Reparto principal
+                        </h2>
+                        <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                            {movie.cast.map(member => (
+                                <CastCard key={member.id} member={member} />
+                            ))}
+                        </div>
                     </div>
                 )}
 
