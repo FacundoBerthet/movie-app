@@ -10,7 +10,7 @@ export default function MovieCard({ movie, isLast, isFirst }) {
       onMouseLeave={() => setExpanded(false)}>
         <div 
             className="aspect-[2/3] rounded-md overflow-hidden bg-terciopelo 
-                      transition-transform duration-400 group-hover:scale-[1.28] 
+                      transition-transform duration-400 group-hover:scale-[1.55] 
                       group-hover:-translate-y-2 group-hover:shadow-[0_20px_60px_rgba(0,0,0,0.9)]
                       relative">
             <img 
@@ -28,7 +28,7 @@ export default function MovieCard({ movie, isLast, isFirst }) {
                           transition-all duration-300
                           group-hover:opacity-100 group-hover:translate-y-0">
                
-                <h3 className="font-display text-crema text-sm leading-tight mb-1">
+                <h3 className="font-display text-crema text-base leading-tight mb-1">
                     {movie.title}
                 </h3>
 
@@ -37,7 +37,7 @@ export default function MovieCard({ movie, isLast, isFirst }) {
                   <span className="text-reflector text-xs">★ {movie.rating?.toFixed(1)}</span>
                 </div>
 
-                <p className={`text-pergamino text-xs leading-relaxed transition-all duration-300
+                <p className={`text-pergamino text-xs transition-all duration-300
                   ${expanded ? "line-clamp-none" : "line-clamp-3"}`}>
                   {movie.overview}
                 </p>
