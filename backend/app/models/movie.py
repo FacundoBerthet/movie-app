@@ -69,7 +69,7 @@ class HeroMovie(BaseModel):
     logo_url: str | None
     genres: list[Genre]
     director: str | None
-    watchProviders: WatchProviders | None
+    watch_providers: WatchProviders | None
 
 
 class PaginatedMovies(BaseModel):
