@@ -113,12 +113,40 @@ def to_watch_provider(data:dict) -> WatchProviders:
 # ---------------------------------------------------------------------------
 # Llamadas a la API
 # ---------------------------------------------------------------------------
+async def get_now_playing(client: httpx.AsyncClient,
+    language: str = "es-AR",
+    region: str = "AR",
+    page: int = 1) -> PaginatedMovies:
+    """Devuelve películas con actualmente en cines."""
+    params = {
+        "language": language,
+        "region": region.upper(),
+        "page": page
+    }
+
+    try:
+        response = await client.get("/movie/now_playing", params=params)
+        response.raise_for_status()
+
+    except httpx.TimeoutException:
+        raise UpstreamError("TMDB request timed out")
+    except httpx.HTTPStatusError as e:
+        raise UpstreamError(f"TMDB returned status {e.response.status_code}")
+    except httpx.RequestError:
+        raise UpstreamError("Could not connect to TMDB")
+
+    data = response.json()
+    if "results" not in data:
+        raise UpstreamError("Invalid response from TMDB")
+
+    return to_paginated_movies(data)
+
 
 async def get_upcoming_movies(client: httpx.AsyncClient,
     language: str = "es-AR",
     region: str = "AR",
     page: int = 1,
-    days_ahead:int = 30) -> PaginatedMovies:
+    days_ahead:int = 90) -> PaginatedMovies:
     """Devuelve películas con estreno en cines dentro de los próximos `days_ahead` días."""
 
     today = date.today()
@@ -149,6 +177,52 @@ async def get_upcoming_movies(client: httpx.AsyncClient,
     if "results" not in data:
         raise UpstreamError("Invalid response from TMDB")
 
+    return to_paginated_movies(data)
+
+
+async def get_trending(client: httpx.AsyncClient,
+    language: str = "es-AR") -> PaginatedMovies:
+    """Devuelve películas populares esta semana."""
+    params = {"language": language}
+    try:
+        response = await client.get("/trending/movie/week", params=params)
+        response.raise_for_status()
+    except httpx.TimeoutException:
+        raise UpstreamError("TMDB request timed out")
+    except httpx.HTTPStatusError as e:
+        raise UpstreamError(f"TMDB returned status {e.response.status_code}")
+    except httpx.RequestError:
+        raise UpstreamError("Could not connect to TMDB")
+
+    data = response.json()
+    if "results" not in data:
+        raise UpstreamError("Invalid response from TMDB")
+    return to_paginated_movies(data)
+
+
+async def get_top_rated(client: httpx.AsyncClient,
+    language: str = "es-AR",
+    region: str = "AR",
+    page: int = 1) -> PaginatedMovies:
+    """Devuelve películas mejor valoradas históricamente."""
+    params = {
+        "language": language,
+        "region": region.upper(),
+        "page": page,
+    }
+    try:
+        response = await client.get("/movie/top_rated", params=params)
+        response.raise_for_status()
+    except httpx.TimeoutException:
+        raise UpstreamError("TMDB request timed out")
+    except httpx.HTTPStatusError as e:
+        raise UpstreamError(f"TMDB returned status {e.response.status_code}")
+    except httpx.RequestError:
+        raise UpstreamError("Could not connect to TMDB")
+
+    data = response.json()
+    if "results" not in data:
+        raise UpstreamError("Invalid response from TMDB")
     return to_paginated_movies(data)
 
 
