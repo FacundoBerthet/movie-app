@@ -20,7 +20,7 @@ async def upcoming_movies(
     language: str = Query(default="es-AR"),
     region: str = Query(default="AR"),
     page: int = Query(default=1, ge=1),
-    days_ahead: int = Query(default=30, ge=0, le=365)):
+    days_ahead: int = Query(default=90, ge=0, le=365)):
     
     try:
         return await get_upcoming_movies(client, language, region, page, days_ahead)
