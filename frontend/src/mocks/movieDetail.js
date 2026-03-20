@@ -9,7 +9,6 @@ export const movieDetailMock = {
   "runtime": 139,
   "rating": 8,
   "backdrop_url": "https://image.tmdb.org/t/p/original/xRyINp9KfMLVjRiO5nCsoRDdvvF.jpg",
-  "logo_url": "https://image.tmdb.org/t/p/original/8IgLvXhhr04vLKUZ62lYoyb9IAL.png",
   "crew_highlights": [
     { "role": "Director", "name": "David Fincher", "profile_url": "https://image.tmdb.org/t/p/w185/8nytsqL59SFJTVYVrN72k6qkGgJ.jpg"},
     { "role": "Screenplay", "name": "Jim Uhls", "profile_url": "https://image.tmdb.org/t/p/w185/cckcYc2v0yh1tc9QjRelptcOBko.jpg"},
