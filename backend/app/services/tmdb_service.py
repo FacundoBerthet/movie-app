@@ -7,12 +7,16 @@ propios, y funciones async que realizan los requests HTTP.
 import httpx, asyncio
 from datetime import date, timedelta
 from app.errors.app_errors import UpstreamError, NotFoundError
-from app.models.movie import PaginatedMovies, MovieSummary, MovieDetail, Genre, CastMember, StreamingProvider, WatchProviders
-
+from app.models.movie import (
+    PaginatedMovies, MovieSummary, MovieDetail, Genre, CastMember, 
+    StreamingProvider, WatchProviders, CrewHighlight
+)
 
 # ---------------------------------------------------------------------------
 # Mappers — dict crudo de TMDB → modelos
 # ---------------------------------------------------------------------------
+
+CREW_ROLES = {"Director", "Screenplay", "Novel", "Original Music Composer"}
 
 def to_paginated_movies(data: dict) -> PaginatedMovies:
     return PaginatedMovies(
@@ -33,22 +37,52 @@ def to_movie_summary(data: dict) -> MovieSummary:
         poster_url=f"https://image.tmdb.org/t/p/w500{poster_path}" if poster_path else None
     )
 
-def to_movie_detail(data: dict) -> MovieDetail:
+def to_crew_highlights(data: dict) -> CrewHighlight:
+    profile_path = data.get("profile_path")
+    return CrewHighlight(
+        role=data.get("job"),
+        name=data.get("name"),
+        profile_url=f"https://image.tmdb.org/t/p/w185{profile_path}" if profile_path else None
+    )
+
+def to_movie_detail(
+        data: dict,
+        credits_data: dict,
+        providers_data: dict,
+        recommendations_data: dict
+) -> MovieDetail:
+    cast = [to_cast_member(m) for m in credits_data.get("cast", [])]
+
+    unique = set()
+    crew_highlights = []
+    for member in credits_data.get("crew", []):
+        if member.get("job") in CREW_ROLES and member["name"] not in unique:
+            unique.add(member["name"])
+            crew_highlights.append(to_crew_highlights(member))
+
+    watch_providers = to_watch_provider(providers_data) if providers_data else None
+
+    recommendations = [to_movie_summary(r) for r in recommendations_data.get("results", [])]
+
     poster_path = data.get("poster_path")
     backdrop_path = data.get("backdrop_path")
+
     return MovieDetail(
         id = data["id"],
         title = data["title"],
+        original_title=data.get("original_title"),
         overview = data.get("overview"),
         release_date = data.get("release_date"),
         poster_url = f"https://image.tmdb.org/t/p/w500{poster_path}" if poster_path else None,
         tagline=data.get("tagline"),
         runtime=data.get("runtime"),
+        rating=data.get("vote_average"),
         backdrop_url=f"https://image.tmdb.org/t/p/original{backdrop_path}" if backdrop_path else None,
         genres=[Genre(id=g["id"], name=g["name"]) for g in data.get("genres", [])],
-        cast=[],
-        watch_providers=None,
-        recommendations=[],
+        cast=cast,
+        crew_highlights=crew_highlights,
+        watch_providers=watch_providers,
+        recommendations=recommendations,
     )
 
 def to_cast_member(data: dict) -> CastMember:
@@ -183,9 +217,6 @@ async def get_movie_details(client: httpx.AsyncClient,
     providers_data = providers.json().get("results", {}).get(region.upper(), {})
     recommendations_data = recommendations.json()
 
-    movie = to_movie_detail(detail_data)
-    movie.cast = [to_cast_member(m) for m in credits_data.get("cast", [])[:20]]
-    movie.watch_providers = to_watch_provider(providers_data) if providers_data else None
-    movie.recommendations = [to_movie_summary(r) for r in recommendations_data.get("results", [])]
+    movie = to_movie_detail(detail_data, credits_data, providers_data, recommendations_data)
 
     return movie
