@@ -4,12 +4,12 @@ Aca hay funciones mapper para convertir las respuestas JSON de TMDB en los model
 propios, y funciones async que realizan los requests HTTP.
 """
 
-import httpx, asyncio
+import httpx, asyncio, random
 from datetime import date, timedelta
 from app.errors.app_errors import UpstreamError, NotFoundError
 from app.models.movie import (
     PaginatedMovies, MovieSummary, MovieDetail, Genre, CastMember, 
-    StreamingProvider, WatchProviders, CrewHighlight
+    StreamingProvider, WatchProviders, CrewHighlight, HeroMovie
 )
 
 # ---------------------------------------------------------------------------
@@ -109,6 +109,47 @@ def to_watch_provider(data:dict) -> WatchProviders:
         buy = [to_streaming_provider(s) for s in data.get("buy", [])]
     )
 
+def to_hero_movie(trending_movie: dict,
+    detail_data: dict,
+    region: str = "AR") -> HeroMovie:
+    backdrop_path = trending_movie.get("backdrop_path")
+
+    # logo — español primero, inglés si no hay, None si no hay ninguno
+    logos = detail_data.get("images", {}).get("logos", [])
+    logo_path = get_logo(logos)
+
+    # watch providers
+    providers_raw = detail_data.get("watch/providers", {}).get("results", {}).get(region.upper(), {})
+    watch_providers = to_watch_provider(providers_raw) if providers_raw else None
+
+    # director
+    crew = detail_data.get("credits", {}).get("crew", [])
+    director = None
+    for member in crew:
+        if member.get("job") == "Director":
+            director = member.get("name")
+            break
+
+    return HeroMovie(
+        id=trending_movie["id"],
+        title=trending_movie["title"],
+        overview=trending_movie.get("overview"),
+        backdrop_url=f"https://image.tmdb.org/t/p/original{backdrop_path}" if backdrop_path else None,
+        logo_url=f"https://image.tmdb.org/t/p/original{logo_path}" if logo_path else None,
+        genres=[Genre(id=g["id"], name=g["name"]) for g in detail_data.get("genres", [])],
+        director=director,
+        watch_providers=watch_providers,
+    )
+
+# Funcion aux que toma el logo en español, de no haberlo toma el logo en ingles o sino None
+def get_logo(logos: list) -> str | None:
+    for logo in logos:
+        if logo.get("iso_639_1") == "es":
+            return logo.get("file_path")
+    for logo in logos:
+        if logo.get("iso_639_1") == "en":
+            return logo.get("file_path")
+    return None
 
 # ---------------------------------------------------------------------------
 # Llamadas a la API
@@ -294,3 +335,58 @@ async def get_movie_details(client: httpx.AsyncClient,
     movie = to_movie_detail(detail_data, credits_data, providers_data, recommendations_data)
 
     return movie
+
+
+async def get_hero_movie(client: httpx.AsyncClient,
+    language: str = "es-AR",
+    region: str = "AR") -> HeroMovie:
+    """
+    Devuelve una película aleatoria del trending del día con todos los datos para el hero banner.
+    """
+
+    # 1 — traer el trending del día
+    try:
+        trending_response = await client.get(
+            "/trending/movie/day",
+            params={"language": language}
+        )
+        trending_response.raise_for_status()
+    except httpx.TimeoutException:
+        raise UpstreamError("TMDB request timed out")
+    except httpx.HTTPStatusError as e:
+        raise UpstreamError(f"TMDB returned status {e.response.status_code}")
+    except httpx.RequestError:
+        raise UpstreamError("Could not connect to TMDB")
+
+    trending_data = trending_response.json()
+    if not trending_data.get("results"):
+        raise UpstreamError("Invalid response from TMDB")
+
+    # 2 — filtrar por popularidad y elegir random
+    MIN_POPULARITY = 50
+    results = trending_data["results"]
+    popular = [m for m in results if m.get("popularity", 0) >= MIN_POPULARITY]
+    trending_movie = random.choice(popular) if popular else random.choice(results)
+    movie_id = trending_movie["id"]
+
+    # 3 — traer el detalle con append_to_response
+    try:
+        detail_response = await client.get(
+            f"/movie/{movie_id}",
+            params={
+                "language": language,
+                "append_to_response": "images,watch/providers,credits",
+                "include_image_language": "es,en,null",
+            }
+        )
+        detail_response.raise_for_status()
+    except httpx.TimeoutException:
+        raise UpstreamError("TMDB request timed out")
+    except httpx.HTTPStatusError as e:
+        raise UpstreamError(f"TMDB returned status {e.response.status_code}")
+    except httpx.RequestError:
+        raise UpstreamError("Could not connect to TMDB")
+
+    detail_data = detail_response.json()
+
+    return to_hero_movie(trending_movie, detail_data, region)
