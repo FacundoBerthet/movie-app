@@ -58,11 +58,11 @@ export default function MovieDetailPage() {
                 <div className='flex items-end gap-8 -mt-[29rem] px-8'>
 
                     {/* Poster y tagline*/}        
-                    <div className='flex flex-col items-center gap-5 z-10'>
+                    <div className='flex flex-col items-center gap-5 z-10 '>
                         <img 
                             src={movie.poster_url} 
                             alt={movie.title} 
-                            className='w-80 rounded-lg shadow-2xl'    
+                            className='min-w-80 rounded-lg shadow-2xl h-auto w-auto'    
                         />
                         {movie.tagline && (
                             <p className="text-pergamino text-base italic text-center w-80">
@@ -166,7 +166,7 @@ export default function MovieDetailPage() {
                             Reparto principal
                         </h2>
                         <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-                            {movie.cast.map(member => (
+                            {movie.cast?.slice(0, 12).map(member => (
                                 <CastCard key={member.id} member={member} />
                             ))}
                         </div>
