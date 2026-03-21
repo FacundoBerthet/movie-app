@@ -1,13 +1,16 @@
 import { useState  } from "react"
+import { useNavigate } from "react-router-dom"
 
 export default function MovieCard({ movie, isLast, isFirst }) {
   const [expanded, setExpanded] = useState(false)
+  const navigate = useNavigate()
 
   return (
     <div 
       className={`relative z-0 hover:z-40 cursor-pointer group
-                ${isLast ? "origin-right" : isFirst ? "origin-left" : "origin-center"}`}
-      onMouseLeave={() => setExpanded(false)}>
+      ${isLast ? "origin-right" : isFirst ? "origin-left" : "origin-center"}`}
+      onMouseLeave={() => setExpanded(false)}
+      onClick={() => navigate(`/movies/${movie.id}`)}>
         <div 
             className="aspect-[2/3] rounded-md overflow-hidden bg-terciopelo 
                       transition-transform duration-400 group-hover:scale-[1.55] 
