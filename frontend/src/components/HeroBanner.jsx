@@ -12,14 +12,14 @@ export default function HeroBanner({movie}){
                 <img src={movie.backdrop_url} alt={movie.title} className="w-full h-full object-cover" />
             </div>
             {/* degradado izquierda hacia derecha */}
-            <div className="absolute inset-0 bg-gradient-to-l from-noche/90 via-noche/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-noche/90 via-noche/40 to-transparent" />
             {/* degradado abajo hacia arriba para transición suave a las rows */}
             <div className="absolute inset-0 bg-gradient-to-b from-sala/50 via-transparent to-transparent" />
             {/* degradado abajo hacia arriba para transición suave a las rows */}
             <div className="absolute inset-0 bg-gradient-to-t from-sala via-transparent to-transparent" />
 
             {/* Contenido */}
-            <div className="relative h-full flex items-center justify-end pr-12 pb-12">
+            <div className="relative h-full flex items-center justify-start pl-20 pb-12">
                 <div className="max-w-md flex flex-col gap-5">
                     
                     {/* badge "Popular hoy" */}
@@ -35,7 +35,7 @@ export default function HeroBanner({movie}){
                     <img
                         src={movie.logo_url}
                         alt={movie.title}
-                        className="w-100 object-contain drop-shadow-2xl"
+                        className="w-auto max-h-60 object-contain drop-shadow-2xl"
                     />
                     ) : (
                     <h1 className="font-display text-5xl font-bold text-crema leading-tight drop-shadow-lg">
@@ -87,7 +87,7 @@ export default function HeroBanner({movie}){
                     {/* botón ver detalles de la peli*/}
                     <button 
                         className="self-start mt-2 px-6 py-2.5 bg-reflector text-noche text-sm font-semibold rounded-full hover:bg-reflector2 transition-colors duration-300 tracking-wide"
-                        onClick={() => navigate('/movies/${movie.id}')}>
+                        onClick={() => navigate(`/movies/${movie.id}`)}>
                         Ver detalle →
                     </button>
 
