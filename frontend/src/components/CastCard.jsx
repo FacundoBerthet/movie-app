@@ -7,10 +7,10 @@ export default function CastCard({ member }) {
                 <img
                     src={member.profile_url}
                     alt={member.name}
-                    className="rounded-lg"
+                    className="rounded-lg w-44 h-30"
                 />
             ) : (
-                <div className="rounded-lg bg-cortina border border-reflector/20 flex items-center justify-center">
+                <div className="rounded-lg w-44 h-[27vh] bg-cortina border border-reflector/20 flex items-center justify-center">
                     <span className="text-reflector text-4xl font-display font-bold">
                         {member.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
                     </span>
