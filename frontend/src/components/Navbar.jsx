@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
 import { Search, EllipsisVertical, X } from "lucide-react"
 
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function Navbar() {
     const [openMenu, setOpenMenu] = useState(false)
     const [searchOpen, setSearchOpen] = useState(false)
     const [scrolled, setScrolled] = useState(false)
+    const [searchQuery, setSearchQuery] = useState('')
+    const navigate = useNavigate()
 
     useEffect(() => {
         function handleScroll() {
@@ -16,6 +18,15 @@ export default function Navbar() {
         window.addEventListener('scroll', handleScroll)
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
+
+
+    function handleSearch(e) {
+        if (e.key === 'Enter' && searchQuery.trim().length >= 2) {
+            navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
+            setSearchOpen(false)
+            setSearchQuery('')
+        }
+    }
 
     return (
         <header 
@@ -54,6 +65,9 @@ export default function Navbar() {
                             <input
                                 type="text"
                                 placeholder="Buscar películas..."
+                                value={searchQuery}
+                                onChange={e => setSearchQuery(e.target.value)}
+                                onKeyDown={handleSearch}
                                 className={`bg-transparent px-2 py-1 text-m text-crema placeholder:text-sombra focus:outline-none ${
                                     searchOpen ? 'w-full opacity-100' : 'w-0 opacity-0'
                                 }`}
@@ -87,6 +101,9 @@ export default function Navbar() {
                     <input
                         type="text"
                         placeholder="Buscar películas..."
+                        value={searchQuery}
+                        onChange={e => setSearchQuery(e.target.value)}
+                        onKeyDown={handleSearch}
                         className="rounded-2xl bg-transparent/25 px-3 py-2 text-sm text-reflector2 placeholder:text-reflector2/40 focus:border-[#f5e642] focus:outline-none"
                     />
                     <button className="text-left text-sm text-reflector transition-colors hover:text-reflector2">
