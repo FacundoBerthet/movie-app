@@ -43,3 +43,10 @@ export async function getTopRated({ page = 1 } = {}) {
     if (!res.ok) throw new Error("Error al obtener mejor valoradas")
     return res.json()
 }
+
+export async function searchMovies({ query, page = 1 } = {}) {
+    if (USE_MOCK) return upcomingMoviesMock 
+    const res = await fetch(`${BASE_URL}/movies/search?query=${encodeURIComponent(query)}&page=${page}`)
+    if (!res.ok) throw new Error("Error al buscar películas")
+    return res.json()
+}
