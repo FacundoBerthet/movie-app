@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import MovieGrid from '../components/MovieGrid'
 import MovieRow from '../components/MovieRow'
-import Navbar from '../components/Navbar'
 import HeroBanner from '../components/HeroBanner'
 import { getUpcomingMovies, getHeroMovie, 
         getNowPlaying, getTrending, getTopRated} from '../services/movieService'
