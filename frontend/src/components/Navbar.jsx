@@ -77,7 +77,9 @@ export default function Navbar() {
 
                     {/* nav desktop */}
                     <nav className="hidden items-center gap-6 md:flex text-2xl font-normal">
-                        <button className="text-reflector transition-colors hover:text-reflector2">
+                        <button
+                            onClick={() => navigate('/discover?type=upcoming')}
+                            className="text-reflector transition-colors hover:text-reflector2">
                             Próximamente
                         </button>
                         <button className="text-reflector transition-colors hover:text-reflector2">
@@ -109,7 +111,12 @@ export default function Navbar() {
                     <button className="text-left text-sm text-reflector transition-colors hover:text-reflector2">
                         Inicio
                     </button>
-                    <button className="text-left text-sm text-reflector transition-colors hover:text-reflector2">
+                    <button
+                        onClick={() => {
+                            navigate('/discover?type=upcoming')
+                            setOpenMenu(false)
+                        }}
+                        className="text-left text-sm text-reflector transition-colors hover:text-reflector2">
                         Próximamente
                     </button>
                 </div>
