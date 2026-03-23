@@ -37,19 +37,19 @@ export default function Home() {
             </div>
 
             <div className="relative z-10 max-w-6xl mx-auto mt-0 md:-mt-44 pt-20 md:pt-0">
-                <MovieRow movies={nowPlaying} title={"En cartelera"} />
+                <MovieRow movies={nowPlaying} title={"En cartelera"} type="now_playing" />
             </div>
 
             <div className="max-w-6xl mx-auto">
-                <MovieRow movies={upcoming} title={"Próximos estrenos"} />
+                <MovieRow movies={upcoming} title={"Próximos estrenos"} type="upcoming"/>
             </div>
 
             <div className="max-w-6xl mx-auto">
-                <MovieRow movies={trending} title={"Populares esta semana"} />
+                <MovieRow movies={trending} title={"Populares esta semana"} type="trending"/>
             </div>
 
             <div className="max-w-6xl mx-auto">
-                <MovieRow movies={topRated} title={"Mejor valoradas"} />
+                <MovieRow movies={topRated} title={"Mejor valoradas"} type="top_rated"/>
             </div>
 
         </div>
