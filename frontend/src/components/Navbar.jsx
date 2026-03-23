@@ -82,9 +82,7 @@ export default function Navbar() {
                             className="text-reflector transition-colors hover:text-reflector2">
                             Próximamente
                         </button>
-                        <button className="text-reflector transition-colors hover:text-reflector2">
-                            Explorar ▾
-                        </button>
+
                     </nav>
 
                     {/* hamburguesa — solo mobile */}
