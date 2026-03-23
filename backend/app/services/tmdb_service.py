@@ -390,3 +390,18 @@ async def get_hero_movie(client: httpx.AsyncClient,
     detail_data = detail_response.json()
 
     return to_hero_movie(trending_movie, detail_data, region)
+
+
+async def get_genres(client: httpx.AsyncClient, language: str = "es-AR") -> list[Genre]:
+    try:
+        response = await client.get("/genre/movie/list", params={"language": language})
+        response.raise_for_status()
+    except httpx.TimeoutException:
+        raise UpstreamError("TMDB request timed out")
+    except httpx.HTTPStatusError as e:
+        raise UpstreamError(f"TMDB returned status {e.response.status_code}")
+    except httpx.RequestError:
+        raise UpstreamError("Could not connect to TMDB")
+
+    data = response.json()
+    return [Genre(id=g["id"], name=g["name"]) for g in data.get("genres", [])]
