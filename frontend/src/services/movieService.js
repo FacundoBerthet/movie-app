@@ -50,3 +50,23 @@ export async function searchMovies({ query, page = 1 } = {}) {
     if (!res.ok) throw new Error("Error al buscar películas")
     return res.json()
 }
+
+export async function discoverMovies({ type, page = 1 } = {}) {
+    let url
+
+    if (type === "upcoming") {
+        url = `${BASE_URL}/movies/upcoming?days_ahead=3650&page=${page}&sort_by=primary_release_date.asc`
+    } else if (type === "now_playing") {
+        url = `${BASE_URL}/movies/now_playing?page=${page}`
+    } else if (type === "trending") {
+        url = `${BASE_URL}/movies/trending?page=${page}`
+    } else if (type === "top_rated") {
+        url = `${BASE_URL}/movies/top_rated?page=${page}`
+    } else {
+        url = `${BASE_URL}/movies/upcoming?days_ahead=3650&page=${page}`
+    }
+
+    const res = await fetch(url)
+    if (!res.ok) throw new Error("Error al explorar películas")
+    return res.json()
+}
