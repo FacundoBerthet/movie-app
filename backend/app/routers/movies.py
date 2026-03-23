@@ -23,9 +23,10 @@ async def upcoming_movies(
     language: str = Query(default="es-AR"),
     region: str = Query(default="AR"),
     page: int = Query(default=1, ge=1),
-    days_ahead: int = Query(default=90, ge=0, le=365)):
+    days_ahead: int = Query(default=90, ge=0, le=3650),
+    sort_by: str = Query(default="popularity.desc")):
     try:
-        return await get_upcoming_movies(client, language, region, page, days_ahead)
+        return await get_upcoming_movies(client, language, region, page, days_ahead, sort_by)
     except UpstreamError as e:
         raise HTTPException(status_code=502, detail=e.message)
 
