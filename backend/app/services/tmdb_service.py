@@ -161,8 +161,8 @@ async def get_now_playing(client: httpx.AsyncClient,
     """Devuelve películas con actualmente en cines."""
     params = {
         "language": language,
-        "region": region.upper(),
-        "page": page
+        "page": page,
+        "sort_by": "popularity.desc",
     }
 
     try:
@@ -187,7 +187,8 @@ async def get_upcoming_movies(client: httpx.AsyncClient,
     language: str = "es-AR",
     region: str = "AR",
     page: int = 1,
-    days_ahead:int = 90) -> PaginatedMovies:
+    days_ahead:int = 90,
+    sort_by: str = "popularity.desc") -> PaginatedMovies:
     """Devuelve películas con estreno en cines dentro de los próximos `days_ahead` días."""
 
     today = date.today()
@@ -195,9 +196,9 @@ async def get_upcoming_movies(client: httpx.AsyncClient,
 
     params = {
         "language": language,
-        "region": region.upper(),
         "page": page,
-        "sort_by": "primary_release_date.asc",
+        "region": region,
+        "sort_by": sort_by,
         "release_date.gte": today.isoformat(),
         "release_date.lte": end_date.isoformat(),
         "with_release_type": "2|3",
@@ -224,7 +225,8 @@ async def get_upcoming_movies(client: httpx.AsyncClient,
 async def get_trending(client: httpx.AsyncClient,
     language: str = "es-AR") -> PaginatedMovies:
     """Devuelve películas populares esta semana."""
-    params = {"language": language}
+    params = {"language": language,
+              "sort_by": "popularity.desc",}
     try:
         response = await client.get("/trending/movie/week", params=params)
         response.raise_for_status()
@@ -248,7 +250,6 @@ async def get_top_rated(client: httpx.AsyncClient,
     """Devuelve películas mejor valoradas históricamente."""
     params = {
         "language": language,
-        "region": region.upper(),
         "page": page,
     }
     try:
