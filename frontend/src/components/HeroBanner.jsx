@@ -73,7 +73,7 @@ export default function HeroBanner({movie}){
                         <div className="flex gap-2">
                             {movie.watch_providers.stream.map(p => (
                                 <img
-                                    key={p.provider_id}
+                                    key={p.id}
                                     src={`https://image.tmdb.org/t/p/w92${p.logo_url}`}
                                     alt={p.name}
                                     title={p.name}

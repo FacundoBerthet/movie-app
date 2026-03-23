@@ -3,7 +3,9 @@ import {mockHero}  from "../mocks/MovieHero"
 import { movieDetailMock } from "../mocks/movieDetail"
 
 const USE_MOCK = false
-const BASE_URL = "http://localhost:8000"
+
+const RAW_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000"
+const BASE_URL = RAW_BASE_URL.replace(/\/$/, "")
 
 export async function getUpcomingMovies({ page = 1 } = {}) {
     if (USE_MOCK) return upcomingMoviesMock
