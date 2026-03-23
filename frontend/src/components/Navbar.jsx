@@ -106,9 +106,6 @@ export default function Navbar() {
                         onKeyDown={handleSearch}
                         className="rounded-2xl bg-transparent/25 px-3 py-2 text-sm text-reflector2 placeholder:text-reflector2/40 focus:border-[#f5e642] focus:outline-none"
                     />
-                    <button className="text-left text-sm text-reflector transition-colors hover:text-reflector2">
-                        Inicio
-                    </button>
                     <button
                         onClick={() => {
                             navigate('/discover?type=upcoming')

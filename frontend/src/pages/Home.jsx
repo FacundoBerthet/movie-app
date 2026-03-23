@@ -32,11 +32,9 @@ export default function Home() {
     return(
         <div className='bg-sala'>
 
-            <div className='hidden md:block'>    
-                {hero && <HeroBanner movie={hero}/>}
-            </div>
+            {hero && <HeroBanner movie={hero}/>}
 
-            <div className="relative z-10 max-w-6xl mx-auto mt-0 md:-mt-44 pt-20 md:pt-0">
+            <div className="relative z-10 max-w-6xl mx-auto mt-0 md:-mt-44 pt-10 md:pt-0">
                 <MovieRow movies={nowPlaying} title={"En cartelera"} type="now_playing" />
             </div>
 

@@ -29,14 +29,14 @@ export default function MovieRow({ title, movies, type }) {
         <div className="mb-12 group/row relative">
 
             {/* título + indicadores */}
-            <div className="flex justify-between gap-2 sm:gap-3 mb-3 pl-6 mr-8">
+            <div className="flex justify-between gap-1 sm:gap-3 mb-3 pl-6 mr-8">
                 <h2 
                     onClick={() => type && navigate(`/discover?type=${type}`)}
                     className={`font-sans text-reflector text-xl 
                         ${type ? 'cursor-pointer hover:text-reflector2 transition-colors' : ''}`}>
                         {title}
                 </h2>
-                <div className="flex items-center gap-1">
+                <div className="hidden sm:flex items-center gap-1">
                 {Array.from({ length: totalPages }).map((_, i) => (
                     <div
                     key={i}
@@ -49,12 +49,12 @@ export default function MovieRow({ title, movies, type }) {
 
             
              {/* carrusel */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
 
                 {/* flecha izquierda */}       
                 <button
                     onClick={previousMovies}
-                    className={`text-reflector text-5xl sm:text-6xl w-4 flex-shrink-0 text-center transition-opacity duration-300 hover:text-reflector2
+                    className={`text-reflector ml-2 text-5xl sm:text-6xl w-4 flex-shrink-0 text-center transition-opacity duration-300 hover:text-reflector2
                     ${actualPage === 0 ? "opacity-0 pointer-events-none" : "opacity-100"}`}>‹
                 </button>
 
@@ -69,7 +69,7 @@ export default function MovieRow({ title, movies, type }) {
                 {/* flecha derecha */}
                 <button
                     onClick={nextMovies}
-                    className={`text-reflector text-5xl sm:text-6xl w-4 flex-shrink-0 text-center transition-opacity duration-300 hover:text-reflector2
+                    className={`text-reflector mr-2 text-5xl sm:text-6xl w-4 flex-shrink-0 text-center transition-opacity duration-300 hover:text-reflector2
                     ${actualPage === totalPages - 1 ? "opacity-0 pointer-events-none" : "opacity-100"}`}>›
                 </button>
 
