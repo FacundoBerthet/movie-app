@@ -36,3 +36,13 @@ def get_tmdb_client() -> httpx.AsyncClient:
         params={"api_key": settings.tmdb_api_key},
         timeout=10.0,
     )
+
+
+async def close_tmdb_client() -> None:
+    """Cierra el cliente cacheado al apagar la app para liberar conexiones."""
+    if get_tmdb_client.cache_info().currsize == 0:
+        return
+
+    client = get_tmdb_client()
+    await client.aclose()
+    get_tmdb_client.cache_clear()

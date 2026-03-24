@@ -1,6 +1,7 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.config import get_settings
+from app.config import get_settings, close_tmdb_client
 
 from app.routers import (
     movies, genres
@@ -8,9 +9,16 @@ from app.routers import (
 
 settings = get_settings()
 
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    yield
+    await close_tmdb_client()
+
 app = FastAPI(
     title=settings.app_name,
-    description="API Backend para busqueda de peliculas y proximos lanzamientos"
+    description="API Backend para busqueda de peliculas y proximos lanzamientos",
+    lifespan=lifespan,
 )
 
 app.add_middleware(
@@ -22,3 +30,12 @@ app.add_middleware(
 
 app.include_router(movies.router)
 app.include_router(genres.router)
+
+
+@app.get("/health", tags=["health"])
+async def health() -> dict[str, str]:
+    """Healthcheck simple para monitoreo y probes de deploy."""
+    return {
+        "status": "ok",
+        "service": "backend",
+    }
