@@ -4,8 +4,12 @@ import { movieDetailMock } from "../mocks/movieDetail"
 
 const USE_MOCK = false
 
-const RAW_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000"
+const RAW_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "http://localhost:8000" : "")
 const BASE_URL = RAW_BASE_URL.replace(/\/$/, "")
+
+if (!BASE_URL) {
+    throw new Error("Falta configurar VITE_API_URL para entorno de produccion")
+}
 
 export async function getUpcomingMovies({ page = 1 } = {}) {
     if (USE_MOCK) return upcomingMoviesMock
