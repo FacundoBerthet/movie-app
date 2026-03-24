@@ -18,6 +18,9 @@ env/
 # Variables de entorno
 .env
 .env.*
+!.env.example
+!backend/.env.example
+!frontend/.env.example
 
 # Frontend artifacts (React/Vite)
 frontend/node_modules/
