@@ -11,6 +11,7 @@ from app.models.movie import (
     PaginatedMovies, MovieSummary, MovieDetail, Genre, CastMember, 
     StreamingProvider, WatchProviders, CrewHighlight, HeroMovie
 )
+from app.services import ml_service
 
 # ---------------------------------------------------------------------------
 # Mappers — dict crudo de TMDB → modelos
@@ -21,6 +22,26 @@ CREW_ROLES = {"Director", "Screenplay", "Novel", "Original Music Composer"}
 def to_paginated_movies(data: dict) -> PaginatedMovies:
     return PaginatedMovies(
         list_of_movies=[to_movie_summary(movie) for movie in data["results"]],
+        page=data["page"],
+        total_pages=data["total_pages"],
+        total_results=data["total_results"]
+    )
+
+def to_paginated_upcoming(data: dict, details_and_credits: list[tuple[dict, dict]]) -> PaginatedMovies:
+    movies = []
+    for movie_raw, (detail, credits) in zip(data["results"], details_and_credits):
+        summary = to_movie_summary(movie_raw)
+        if detail and credits:
+            try:
+                predicted, label = ml_service.predict(detail, credits)
+                summary.predicted_rating       = predicted
+                summary.predicted_rating_label = label
+            except Exception:
+                pass
+        movies.append(summary)
+
+    return PaginatedMovies(
+        list_of_movies=movies,
         page=data["page"],
         total_pages=data["total_pages"],
         total_results=data["total_results"]
@@ -189,7 +210,8 @@ async def get_upcoming_movies(client: httpx.AsyncClient,
     page: int = 1,
     days_ahead:int = 90,
     sort_by: str = "popularity.desc") -> PaginatedMovies:
-    """Devuelve películas con estreno en cines dentro de los próximos `days_ahead` días."""
+    """Devuelve películas con estreno en cines dentro de los próximos `days_ahead` días,
+    enriquecidas con la predicción de rating del modelo ML."""
 
     today = date.today()
     end_date = today + timedelta(days=days_ahead)
@@ -219,7 +241,37 @@ async def get_upcoming_movies(client: httpx.AsyncClient,
     if "results" not in data:
         raise UpstreamError("Invalid response from TMDB")
 
-    return to_paginated_movies(data)
+    # Traer detalles y credits de todas las películas en paralelo
+    movie_ids = [m["id"] for m in data["results"]]
+
+    async def fetch_details_and_credits(movie_id: int) -> tuple[dict, dict]:
+        try:
+            detail, credits = await asyncio.gather(
+                client.get(f"/movie/{movie_id}", params={"language": language}),
+                client.get(f"/movie/{movie_id}/credits", params={"language": language}),
+            )
+            detail.raise_for_status()
+            credits.raise_for_status()
+            return detail.json(), credits.json()
+        except Exception:
+            return {}, {}
+
+    results = await asyncio.gather(*[fetch_details_and_credits(mid) for mid in movie_ids])
+
+    # Construir lista de películas con predicción
+    movies = []
+    for movie_raw, (detail, credits) in zip(data["results"], results):
+        summary = to_movie_summary(movie_raw)
+        if detail and credits:
+            try:
+                predicted, label = ml_service.predict(detail, credits)
+                summary.predicted_rating       = predicted
+                summary.predicted_rating_label = label
+            except Exception:
+                pass
+        movies.append(summary)
+
+    return to_paginated_upcoming(data, results)
 
 
 async def get_trending(client: httpx.AsyncClient,
