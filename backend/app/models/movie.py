@@ -37,6 +37,8 @@ class MovieSummary(BaseModel):
     year: str | None
     rating: float | None
     poster_url: str | None
+    predicted_rating: float | None = None
+    predicted_rating_label: str | None = None
 
 class MovieDetail(BaseModel):
     """
