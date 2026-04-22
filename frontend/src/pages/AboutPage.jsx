@@ -1,7 +1,8 @@
-
+import { useEffect } from 'react'
 
 const sections = [
     { id: 'sobre-filmr', label: 'Sobre filmR' },
+    { id: 'prediccion-ia', label: 'Predicción por IA' },
     { id: 'creditos', label: 'Créditos y APIs' },
     { id: 'acerca-de', label: 'Acerca de' },
 ]
@@ -10,6 +11,11 @@ export default function AboutPage() {
     function scrollTo(id) {
         document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
     }
+
+    useEffect(() => {
+        const hash = window.location.hash.replace('#', '')
+        if (hash) document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' })
+    }, [])
 
     return (
         <div className="bg-sala min-h-screen text-crema pt-28 pb-16">
@@ -47,6 +53,33 @@ export default function AboutPage() {
                         <p className="text-crema/80 leading-relaxed">
                             filmR está en construcción continua. Próximamente: búsqueda avanzada con filtros, 
                             páginas por categoría, tráilers, ratings de múltiples fuentes y más.
+                        </p>
+                    </section>
+
+                    {/* predicción por ia */}
+                    <section id="prediccion-ia" className="flex flex-col gap-4">
+                        <h2 className="font-display text-3xl text-reflector2">Predicción por IA</h2>
+                        <div className="w-12 h-px bg-reflector/30" />
+                        <p className="text-crema/80 leading-relaxed">
+                            La predicción de rating que ves en los próximos estrenos es generada por un modelo de
+                            machine learning entrenado con más de 47.000 películas históricas de IMDb. El modelo aprende
+                            patrones a partir del historial del director, el elenco, los géneros, el idioma y el estudio
+                            de producción — todo información disponible antes del estreno.
+                        </p>
+                        <p className="text-crema/80 leading-relaxed">
+                            La predicción no es un spoiler ni una reseña. Es una estimación basada en patrones
+                            históricos: directores con buen historial tienden a hacer buenas películas, ciertos géneros
+                            tienden a recibir mejores ratings, etc. El modelo se equivoca — especialmente en los
+                            extremos — pero da una idea orientativa de qué esperar.
+                        </p>
+                        <p className="text-crema/80 leading-relaxed">
+                            Las categorías <span className="text-crema">(Muy buena, Buena, Regular, Floja)</span> se
+                            basan en el rating predicho en escala de IMDb del 1 al 10.
+                        </p>
+                        <p className="text-crema/60 text-sm leading-relaxed italic">
+                            El modelo no conoce el argumento, el presupuesto de marketing, ni el contexto cultural de
+                            cada película. Películas muy anticipadas tienden a subestimarse, y películas de nicho pueden
+                            sorprender. Tomalo como una guía, no como un veredicto.
                         </p>
                     </section>
 
