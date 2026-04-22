@@ -18,7 +18,7 @@ model = joblib.load(MODEL_PATH)
 fm    = joblib.load(FEATURE_MAPS_PATH)
 
 # --- Umbrales para el label ---
-THRESHOLDS = {"Muy buena": 7.5, "Buena": 6.5, "Regular": 5.5}
+THRESHOLDS = {"Muy buena": 6.65, "Buena": 6.5, "Regular": 5.5}
 
 def get_label(predicted: float) -> str:
     for label, threshold in THRESHOLDS.items():
@@ -43,9 +43,21 @@ def predict(data: dict, credits: dict) -> tuple[float, str]:
     )
     writer_nconst = fm["name_to_nconst"].get(writer_name)
 
-    # Actores top 3
-    actor_names   = [m["name"] for m in sorted(credits.get("cast", []), key=lambda x: x.get("order", 99))[:3]]
-    actor_nconsts = [fm["name_to_nconst"].get(name) for name in actor_names]
+    # Actores top 3 con historial — si no matchea intenta con el siguiente del reparto
+    cast_sorted = sorted(credits.get("cast", []), key=lambda x: x.get("order", 99))
+    actor_names   = []
+    actor_nconsts = []
+    for member in cast_sorted:
+        if len(actor_nconsts) == 3:
+            break
+        nconst = fm["name_to_nconst"].get(member["name"])
+        if nconst and nconst in fm["actor_dict"]:
+            actor_names.append(member["name"])
+            actor_nconsts.append(nconst)
+
+    # Si no llegamos a 3 actores con historial completamos con promedio global
+    while len(actor_nconsts) < 3:
+        actor_nconsts.append(None)
 
     # Features de director
     director_avg   = fm["director_dict"].get(director_nconst, fm["global_mean_director"])
