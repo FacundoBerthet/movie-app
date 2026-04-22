@@ -113,8 +113,12 @@ export default function MovieDetailPage() {
                             </div>
                             <span className='text-reflector/40'>•</span>
                             <span>{Math.floor(movie.runtime / 60)}h {movie.runtime % 60}m</span>
-                            <span className='text-reflector/40'>•</span>
-                            <span className='text-reflector font-medium'>★ {movie.rating?.toFixed(1)}</span>
+                            {movie.release_date && new Date(movie.release_date) <= new Date() && (
+                                <>
+                                    <span className='text-reflector/40'>•</span>
+                                    <span className='text-reflector font-medium'>★ {movie.rating?.toFixed(1)}</span>
+                                </>
+                            )}
                         </div>
 
                         {/* overview */}
