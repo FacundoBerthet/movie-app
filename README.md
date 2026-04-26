@@ -17,7 +17,7 @@ Este proyecto fue hecho como practica full stack con frontend en React y backend
 - Home con hero y filas por categoria (en cartelera, proximos estrenos, tendencias, mejor valoradas)
 - Busqueda por titulo
 - Pagina de detalle con poster, datos principales, crew, cast y recomendaciones
-- Prediccion de rating por IA en la fila de proximos estrenos — cada pelicula muestra una estimacion de su rating antes del estreno
+- Prediccion de rating por IA en la fila de proximos estrenos
 - Diseño responsive para mobile, tablet y desktop
 
 ## Prediccion de rating
