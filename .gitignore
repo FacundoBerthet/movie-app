@@ -30,3 +30,6 @@ frontend/.vite/
 # OS / editor junk
 .DS_Store
 Thumbs.db
+
+# Modelos ml
+ml/

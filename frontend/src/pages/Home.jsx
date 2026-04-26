@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import MovieGrid from '../components/MovieGrid'
 import MovieRow from '../components/MovieRow'
+import UpcomingMovieRow from '../components/UpcomingMovieRow'
 import HeroBanner from '../components/HeroBanner'
-import { getUpcomingMovies, getHeroMovie, 
+import { getUpcomingMovies, getHeroMovie,
         getNowPlaying, getTrending, getTopRated} from '../services/movieService'
 
 export default function Home() {
@@ -34,12 +35,12 @@ export default function Home() {
 
             {hero && <HeroBanner movie={hero}/>}
 
-            <div className="relative z-10 max-w-6xl mx-auto mt-0 md:-mt-44 pt-10 md:pt-0">
-                <MovieRow movies={nowPlaying} title={"En cartelera"} type="now_playing" />
+            <div className="relative z-10 mt-0 md:-mt-44 pt-10 md:pt-0">
+                <UpcomingMovieRow movies={upcoming} />
             </div>
 
             <div className="max-w-6xl mx-auto">
-                <MovieRow movies={upcoming} title={"Próximos estrenos"} type="upcoming"/>
+                <MovieRow movies={nowPlaying} title={"En cartelera"} type="now_playing" />
             </div>
 
             <div className="max-w-6xl mx-auto">
