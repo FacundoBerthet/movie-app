@@ -48,6 +48,8 @@ Resumen rapido:
 - Requests paralelos con `asyncio.gather()` para enriquecer la fila de proximos estrenos sin impactar la latencia
 - Modelo ML cargado una sola vez al iniciar la app con joblib
 
+![Home predictions](docs/screenshots/home_preds.png)
+
 ## Capturas
 
 Home (desktop):
