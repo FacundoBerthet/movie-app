@@ -3,7 +3,7 @@
 Aplicacion web para descubrir peliculas usando la API de TMDB.
 Este proyecto fue hecho como practica full stack con frontend en React y backend en FastAPI.
 
-![Home desktop](docs/screenshots/home_desktop.png__)
+![Home desktop](docs/screenshots/home_desktop.png)
 
 ## Stack tecnologico
 
@@ -52,20 +52,20 @@ Resumen rapido:
 
 Home (desktop):
 
-![Home desktop](docs/screenshots/home3.png__)
-![Home desktop](docs/screenshots/home4.png__)
+![Home desktop](docs/screenshots/home3.png)
+![Home desktop](docs/screenshots/home4.png)
 
 Detalle (desktop):
 
-![Detalle desktop](docs/screenshots/movie_details_desktop.png__)
+![Detalle desktop](docs/screenshots/movie_details_desktop.png)
 
 Detalle (mobile):
 
-![Detalle mobile](docs/screenshots/movie_details_mobile5.png__)
+![Detalle mobile](docs/screenshots/movie_details_mobile5.png)
 
 Detalle (tablet):
 
-![Detalle tablet](docs/screenshots/movie_details_tablet.png__)
+![Detalle tablet](docs/screenshots/movie_details_tablet.png)
 
 ## Mejoras futuras
 
